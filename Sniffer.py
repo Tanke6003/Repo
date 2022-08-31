@@ -52,6 +52,7 @@ def Archivo():
     for l in archivo:
         data +=l[6:54]
     archivo.close()
+    data = str.replace(data,"  "," ")
     print("====Cabecera Ethernet====")
     destination = GetDestination(data)
     print(destination)
@@ -77,11 +78,12 @@ def getType(data):
 #==============
 def Ip():
     global data
-    print("====IP====")
+    print("====IPV4====")
     print(getVersion(data))
     print(getHeaderLen(data))
     getService(data)
     print(getAllLen(data))
+    print(getIdentifi(data))
     Go()
 
 
@@ -138,8 +140,9 @@ def getAllLen(data):
     PackageLendec = int(PackageLen,16)
     PackageLen = str.replace(data[47:53]," ","")
     return "Longitud total del paquete= "+PackageLen[3:]+"H"+" = "+str(PackageLendec)+" bytes"
+def getIdentifi(data):
+    return "Identificacion: "+str.replace(data[54:59]," ","")
 
-    
 
 
 
