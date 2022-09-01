@@ -1,105 +1,57 @@
-data =""
+import Ethernet
+import General
+frame =""
 def Main():
+    global frame
     enter = False
     while enter != True:
-        print("======Bienvenido a AxoSniffer======\n=         Alumno:Ruben Farias     =\n=         Maestro:Gorge Anaya     =")
-        print("=               Menu              =\n=      1.-Cargar desde Archivo    =\n=      2.-Utilizar una Interfaz   =\n=      0.-salir                   =")
+        frame = ""
+        print("======Bienvenido a AxoSniffer======\n=         Maestro:Gorge Anaya     =")
+        print("=               Menu              =\n=      1.-Cargar desde Archivo    =")
+        print("=      2.-Utilizar una Interfaz   =\n=      0.-salir                   =")
         print("===================================")
         opc = input("Elige una Opcion: ")
         if(opc.isnumeric()):
             if(int(opc)==1):
                 Archivo()
-                GoMenu()
             elif(int(opc)==0):
                 exit()
             else:
                 print("Opcion en desarrollo")
         else:
             print("Opcion no valida")
-def GoMenu():
-    enter = False
-    while enter != True:
-        opc = input("Introduce 1 para continuar o 0 para volver al menu: ")
-        if(opc.isnumeric()):
-            if(int(opc)==1):
-                Ip()
-                enter = True
-            elif(int(opc)==0):
-                Main()
-            else:
-                print("Opcion no valida")
-        else:
-            print("Opcion no valida")
-def Go():
-    enter = False
-    while enter != True:
-        opc = input("Introduce 1 para continuar o 0 para salir del programa: ")
-        if(opc.isnumeric()):
-            if(int(opc)==1):
-                Main()
-                enter = True
-            elif(int(opc)==0):
-                exit()
-            else:
-                print("Opcion no valida")
-        else:
-            print("Opcion no valida")
-
-    
 def Archivo():
-    global data
+    global frame
     archivo = open("tramaenhexdump.txt")
     for l in archivo:
-        data +=l[6:54]
+        frame +=l[6:54]
     archivo.close()
-    data = str.replace(data,"  "," ")
-    print("====Cabecera Ethernet====")
-    destination = GetDestination(data)
-    print(destination)
-    source = GetSource(data)
-    print(source)
-    type = getType(data)
-    print(type)
+    frame = str.replace(frame,"  "," ")
+    Ethernet.GetEthernetFrame(frame)
+    General.Go(Main)
+    GetIp()
 
+def GetIp():
+    print("===========IPV4===========")
+    GetVersion()
+    GetHeaderLen()
+    GetService()
+    GetAllLen()
+    GetIdentify()
+    GetFlags()
 
-#=========Ethernet Header
-def GetDestination(data):
-    return "Direccion Mac Destino: "+str.replace(data[0:17]," ",":")
+def GetVersion():
+    return print("Version: "+str.replace(frame[42]," ",""))
+def GetHeaderLen():
+    return print("Longitud de Cabecera: "+str.replace(frame[42]," ","")+" * "+str.replace(frame[43]," ","")+" = "+str(int(str.replace(frame[42]," ","")) * int(str.replace(frame[43]," ",""))))
+def GetService():
+    service = General.StringHexaToBinary(frame[45:47])
+    GetPrecedencia(service)
+    GetTOS(service)
+    GetMBZ(service[7])
 
-def GetSource(data):
-    return "Direccion Mac Origen: "+str.replace(data[18:35]," ",":")
-
-def getType(data):
-    if (str.replace(data[36:42]," ","") == "0800"):
-        return "Tipo: PROTOCOLO IPV4 "+"0X"+str.replace(data[36:42]," ","")
-    else:
-        return "Tipo: PROTOCOLO EN DESARROLLO"
-
-#==============
-def Ip():
-    global data
-    print("====IPV4====")
-    print(getVersion(data))
-    print(getHeaderLen(data))
-    getService(data)
-    print(getAllLen(data))
-    print(getIdentifi(data))
-    Go()
-
-
-def getVersion(data):
-    return "Version: "+str.replace(data[42]," ","")
-def getHeaderLen(data):
-    return "Longitud de Cabecera: "+str.replace(data[42]," ","")+" * "+str.replace(data[43]," ","")+" = "+str(int(str.replace(data[42]," ","")) * int(str.replace(data[43]," ","")))
-def getService(data):
-    service = bin(int(data[45:47],16))[2:].zfill(8)
-    print(getPrecedencia(service))
-    print(getTOS(service))
-    print("MBZ: "+service[0])
-
-def getPrecedencia(service):
-    precedencia = service[4:8]
-    precedencia = precedencia[1:]
+def GetPrecedencia(data):
+    precedencia = data[0:3]
     if precedencia == "000":
         precedencia= "Rutina"
     elif precedencia == "001":
@@ -118,33 +70,66 @@ def getPrecedencia(service):
         precedencia="Control de red ('network control')"
     else :
         precedencia="No valido"
-    return "Precedencia: "+ precedencia
-def getTOS(service):
-    TOS = service[1:5]
-    if TOS == "1000":
-        TOS = "Minimizar retardo"
-    elif TOS == "0100":
-        TOS = "Maximizar la densidad de flujo"
-    elif TOS == "0010":
-        TOS = "Maximizar la fiabilidad"
-    elif TOS == "0001":
-        TOS = "Minimizar el coste monetario"
-    elif TOS == "0000":
-        TOS = "servicio normal"
-    else:
-        TOS = "No valido"
-    return "TOS(TIPO DE SERVICIO): "+TOS
-    
-def getAllLen(data):
-    PackageLen = str.replace(data[48:53]," ","")
-    PackageLendec = int(PackageLen,16)
-    PackageLen = str.replace(data[47:53]," ","")
-    return "Longitud total del paquete= "+PackageLen[3:]+"H"+" = "+str(PackageLendec)+" bytes"
-def getIdentifi(data):
-    return "Identificacion: "+str.replace(data[54:59]," ","")
+    return print("Precedencia: "+ precedencia)
+def GetTOS(service):
+    GetDelay(service[3])
+    GetTroughput(service[4])
+    GetReliability(service[5])
+    GetCost(service[6])
+def GetDelay(data):
+    if data == "0":
+        return print("Delay: Normal")
+    elif data == "1":
+        return print("Delay: Low")
+def GetTroughput(data):
+    if data == "0":
+        return print("Troughput: Normal")
+    elif data == "1":
+        return print("Troughput: High")
+def GetReliability(data):
+    if data == "0":
+        return print("Reliability: Normal")
+    elif data == "1":
+        return print("Reliability: High")
+def GetCost(data):
+    if data == "0":
+        return print("Cost: Normal")
+    elif data == "1":
+        return print("Cost: Low")
+def GetMBZ(data):
+    if data == "0":
+        return print("MBZ: 0")
+    elif data == "1":
+        return print("MBZ: 1 ('Error campo reservado activo')")
+def GetAllLen():
+    return print("Longitud total del paquete: "+str.replace(frame[48:53]," ","")+"H"+" = "+str(int(str.replace(frame[48:53]," ",""),16))+" bytes")
+def GetIdentify():
+    return print("Identificacion: "+str.replace(frame[54:59]," ",""))
+def GetFlags():
+    GetBitReservado(General.StringHexaToBinary(str.replace(frame[60:65]," ","")))
+    GetDF(General.StringHexaToBinary(str.replace(frame[60:65]," ","")))
+    GetMF(General.StringHexaToBinary(str.replace(frame[60:65]," ","")))
+def GetBitReservado(data):
+    if data[0] == "0":
+        return "Bit reservado: 0"
+    elif data[0] == "1":
+        return "Bit reservado: 1 ('Error este campo debe ser reservado')"
+def GetDF(data):
+    if data[1] == "0":
+        return "DF: Permite Fragmentacion"
+    elif data[1] == "1":
+        return "DF: No Permite Fragmentacion"
+def GetMF(data):
+    if data[2] == "0":
+        return "MF: No es el ultimo paquete del datagrama"
+    elif data[2] == "1":
+        return "MF: Es el ultimo paquete del datagrama"
+
+
 
 
 
 
 
 Main()
+
