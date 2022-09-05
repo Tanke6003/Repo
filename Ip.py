@@ -12,6 +12,7 @@ def GetIp(pframe):
     GetDesplazamiento()
     GetTimeLife()
     #Getprotocolo()
+    
 
 
 def GetVersion():

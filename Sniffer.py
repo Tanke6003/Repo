@@ -29,8 +29,9 @@ def Archivo():
     archivo.close()
     frame = str.replace(frame,"  "," ")
     Ethernet.GetEthernetFrame(frame)
-    General.Go(Main)
+    General.Go(Main,"continue")
     Ip.GetIp(frame)
+    General.Go(Main,exit)
 
 
 Main()
