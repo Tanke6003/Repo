@@ -9,7 +9,10 @@ def GetIp(pframe):
     GetAllLen()
     GetIdentify()
     GetFlags()
-    Next()
+    GetDesplazamiento()
+    GetTimeLife()
+    #Getprotocolo()
+
 
 def GetVersion():
     return print("Version: "+str.replace(frame[42]," ",""))
@@ -77,23 +80,29 @@ def GetAllLen():
 def GetIdentify():
     return print("Identificacion: "+str.replace(frame[54:59]," ",""))
 def GetFlags():
-    GetBitReservado(General.StringHexaToBinary(str.replace(frame[60:65]," ","")))
-    GetDF(General.StringHexaToBinary(str.replace(frame[60:65]," ","")))
-    GetMF(General.StringHexaToBinary(str.replace(frame[60:65]," ","")))
+    GetBitReservado(General.StringHexaToBinary(str.replace(frame[60:62]," ","")))
+    GetDF(General.StringHexaToBinary(str.replace(frame[60:62]," ","")))
+    GetMF(General.StringHexaToBinary(str.replace(frame[60:62]," ","")))
 def GetBitReservado(data):
     if data[0] == "0":
-        return "Bit reservado: 0"
+        return print("Bit reservado: 0")
     elif data[0] == "1":
-        return "Bit reservado: 1 ('Error este campo debe ser reservado')"
+        return print("Bit reservado: 1 ('Error este campo debe ser reservado')")
 def GetDF(data):
     if data[1] == "0":
-        return "DF: Permite Fragmentacion"
+        return print("DF: Permite Fragmentacion")
     elif data[1] == "1":
-        return "DF: No Permite Fragmentacion"
+        return print("DF: No Permite Fragmentacion")
 def GetMF(data):
     if data[2] == "0":
-        return "MF: No es el ultimo paquete del datagrama"
+        return print("MF: Es el ultimo paquete del datagrama")
     elif data[2] == "1":
-        return "MF: Es el ultimo paquete del datagrama"
-def Next():
-    print(General.StringHexaToBinary(str.replace(frame[60:65]," ","")))
+        return print("MF: No es el ultimo paquete del datagrama")
+def GetDesplazamiento():
+    desplazamiento = General.StringHexaToBinary(str.replace(frame[60:65]," ","a"))
+    desplazamiento = desplazamiento[4:]
+    print("Desplazamiento de la fragmentacion: " + str(int(desplazamiento,2)))
+def GetTimeLife():
+    return print("Tiempo de vida en segundos: " +str(int(str.replace(frame[66:68]," ",""),16)))
+def Getprotocolo():
+    return print(str.replace(frame[69:71]," ",""))
