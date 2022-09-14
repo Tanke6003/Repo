@@ -33,5 +33,4 @@ def Archivo():
     Ip.GetIp(frame)
     General.Go(Main,exit)
 
-
 Main()

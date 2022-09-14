@@ -11,9 +11,9 @@ def GetIp(pframe):
     GetFlags()
     GetDesplazamiento()
     GetTimeLife()
-    #Getprotocolo()
+    Getprotocolo()
+    GetCheckSum()
     
-
 
 def GetVersion():
     return print("Version: "+str.replace(frame[42]," ",""))
@@ -106,4 +106,51 @@ def GetDesplazamiento():
 def GetTimeLife():
     return print("Tiempo de vida en segundos: " +str(int(str.replace(frame[66:68]," ",""),16)))
 def Getprotocolo():
-    return print(str.replace(frame[69:71]," ",""))
+    protocolo = int(str.replace(frame[69:71]," ",""),16)
+    if protocolo == 0:
+        return print("Protocolo: Reservado")
+    elif protocolo == 1:
+        return print("Protocolo: ICMP(\"Internet Control Message Protocol\")")
+    elif protocolo == 2:
+        return print("Protocolo: IGMP(\"Internet Group Management Protocol\")")
+    elif protocolo == 3:
+        return print("Protocolo: GGP(\"Gateway-to-Gateway Protocol\")")
+    elif protocolo == 4:
+        return print("Protocolo: IP(IP encapsulation)")
+    elif protocolo == 5:
+        return print("Protocolo: Flujo(\"Stream\")")
+    elif protocolo == 6:
+        return print("Protocolo: TCP(\"Transmission Control\")")
+    elif protocolo == 8:
+        return print("Protocolo: EGP (\“Exterior Gateway Protocol\”)")
+    elif protocolo == 9:
+        return print("Protocolo: PIRP (“Private Interior Routing Protocol”)")
+    elif protocolo == 17:
+        return print("Protocolo: UDP (“User Datagram”)")
+    elif protocolo == 89:
+        return print("Protocolo: OSPF (“Open Shortest Path First”)")
+    else:
+        return print("Protocolo: no reconocido")
+def GetCheckSum():
+    ipbody = str.replace(str.replace(frame[42:101]," ",""),"\n","")
+    limitInf = 0
+    limitSup = 4
+    iplenght = len(ipbody)
+    res = "0000000000000000"
+    res = bin(int(General.StringBinToBinary(res),2))
+    while(limitSup < iplenght):
+        if( limitInf != 20):
+            bit = General.StringHexaToBinary(ipbody[limitInf:limitSup])
+            bit = General.ComplementOne(bit)
+            bit  = bin(bit)
+            print(int(res,2) + int(bit,2))
+            res = "{0:b}".format(int(res,2) + int(bit,2))
+            if len(res) == 17:
+                print("carry",res[1])
+                res = "{0:b}".format(int(res[1:],2) + int(res[1],2))
+            print("num",bit[2:])
+            print("res",res)
+        print(ipbody[limitInf:limitSup])
+        limitInf = limitSup
+        limitSup += 4
+    return print(str.replace(str.replace(frame[42:101]," ",""),"\n",""))
