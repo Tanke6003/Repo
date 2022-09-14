@@ -1,3 +1,4 @@
+from msilib import PID_TITLE
 import General
 def GetIp(pframe):
     global frame
@@ -137,22 +138,33 @@ def GetCheckSum():
     limitSup = 4
     res = bin(0)
     iplenght = len(ipbody)
+    i=0
     while(limitSup < iplenght):
+        i=i+1
+
         if( limitInf != 20):
-            print("numhexa",ipbody[limitInf:limitSup])
+            ##print("numhexa",ipbody[limitInf:limitSup])
             numhexa = General.StringHexaToBinary(ipbody[limitInf:limitSup])
-            print("numhexa convert to bin ",numhexa)
+            ##print("numhexa convert to bin ",numhexa)
             numbin = General.StringBinToBinary(numhexa)
-            print("strin bin convert to bin ",numbin)
-            numcom = bin(int(General.ComplementOne(numbin) ,2))[2:]
+            ##print("strin bin convert to bin ",numbin)
+            numcom = General.ComplementOne(numbin)
             print("comp ",numcom)
             res = bin(int(res,2)+int(numcom,2))[2:]
-            print( "res",res)
+            ##print( "res",res)
             if(len(res)>16 and res[1]=='1'):
                 carry = res[1]
-                print("carry ",carry)
-                res = bin(int(res[1:],2)+int(carry,2))
-                print(res)
+                ##print("carry ",carry)
+                res = bin(int(res[1:],2)+int(carry,2))[2:]
+                ##print("len res",len(res))
+                ##print( "res carry", res)
+                if(len(res)>16 and res[1]=='1'):
+                    carry = res[1]
+                    ##print("carry2",carry)
+                    res = bin(int(res[1:],2)+int(carry,2))[2:]
+                    ##print("len res2",len(res))
+                    ##print( "res carry2", res)
+            print(i,":",res)
         limitInf = limitSup
         limitSup += 4
     return print(str.replace(str.replace(frame[42:101]," ",""),"\n",""))
