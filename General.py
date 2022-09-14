@@ -31,7 +31,7 @@ def ComplementOne(bitnumber):
             bit += "1"
         else:
             bit += "0"
-    return int(bit,2)
+    return bit
 
 
     

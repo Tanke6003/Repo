@@ -135,6 +135,30 @@ def GetCheckSum():
     ipbody = str.replace(str.replace(frame[42:101]," ",""),"\n","")
     limitInf = 0
     limitSup = 4
+    res = bin(0)
+    iplenght = len(ipbody)
+    while(limitSup < iplenght):
+        if( limitInf != 20):
+            print("numhexa",ipbody[limitInf:limitSup])
+            numhexa = General.StringHexaToBinary(ipbody[limitInf:limitSup])
+            print("numhexa convert to bin ",numhexa)
+            numbin = General.StringBinToBinary(numhexa)
+            print("strin bin convert to bin ",numbin)
+            numcom = bin(int(General.ComplementOne(numbin) ,2))[2:]
+            print("comp ",numcom)
+            res = bin(int(res,2)+int(numcom,2))[2:]
+            print( "res",res)
+            if(len(res)>16 and res[1]=='1'):
+                carry = res[1]
+                print("carry ",carry)
+                res = bin(int(res[1:],2)+int(carry,2))
+                print(res)
+        limitInf = limitSup
+        limitSup += 4
+    return print(str.replace(str.replace(frame[42:101]," ",""),"\n",""))
+    """ ipbody = str.replace(str.replace(frame[42:101]," ",""),"\n","")
+    limitInf = 0
+    limitSup = 4
     iplenght = len(ipbody)
     res = "0000000000000000"
     res = bin(int(General.StringBinToBinary(res),2))
@@ -153,4 +177,4 @@ def GetCheckSum():
         print(ipbody[limitInf:limitSup])
         limitInf = limitSup
         limitSup += 4
-    return print(str.replace(str.replace(frame[42:101]," ",""),"\n",""))
+    return print(str.replace(str.replace(frame[42:101]," ",""),"\n","")) """
