@@ -3,7 +3,7 @@ import General
 def GetIp(pframe):
     global frame
     frame = pframe
-    print("===========IPV4===========")
+    print("===========IPV4 pt 1===========")
     GetVersion()
     GetHeaderLen()
     GetService()
@@ -11,10 +11,14 @@ def GetIp(pframe):
     GetIdentify()
     GetFlags()
     GetDesplazamiento()
+    General.Continue()
+    print("===========IPV4 pt 2===========")
     GetTimeLife()
     Getprotocolo()
-    GetCheckSum()
-    
+    '''GetCheckSum()
+    '''
+    GetIpOrigin()
+    GetIpDestino()
 
 def GetVersion():
     return print("Version: "+str.replace(frame[42]," ",""))
@@ -151,19 +155,21 @@ def GetCheckSum():
             numcom = General.ComplementOne(numbin)
             print("comp ",numcom)
             res = bin(int(res,2)+int(numcom,2))[2:]
-            ##print( "res",res)
+            print( "res len",len(res))
             if(len(res)>16 and res[1]=='1'):
                 carry = res[1]
-                ##print("carry ",carry)
+                print("carry ",carry)
                 res = bin(int(res[1:],2)+int(carry,2))[2:]
-                ##print("len res",len(res))
-                ##print( "res carry", res)
+                print("len res carry",len(res))
+                #print( "res carry", res)
+                #print( "res carry", res)
                 if(len(res)>16 and res[1]=='1'):
                     carry = res[1]
                     ##print("carry2",carry)
                     res = bin(int(res[1:],2)+int(carry,2))[2:]
                     ##print("len res2",len(res))
                     ##print( "res carry2", res)
+
             print(i,":",res)
         limitInf = limitSup
         limitSup += 4
@@ -190,3 +196,25 @@ def GetCheckSum():
         limitInf = limitSup
         limitSup += 4
     return print(str.replace(str.replace(frame[42:101]," ",""),"\n","")) """
+def GetIpOrigin():
+    Iphexa = str.replace(frame[78:89]," ","")
+    liminf =0
+    limsup= 2
+    ipdecimal = ""
+    while(limsup <= len(Iphexa)):
+        ipdecimal += str(int(Iphexa[liminf:limsup],16))+"."
+        liminf = limsup
+        limsup = limsup + 2
+    ipdecimal = ipdecimal[0:len(ipdecimal)-1]
+    return print("Direccion IP Origen: "+ ipdecimal)
+def GetIpDestino():
+    Iphexa = str.replace(str.replace(frame[89:101]," ",""),"\n","")
+    liminf =0
+    limsup= 2
+    ipdecimal = ""
+    while(limsup <= len(Iphexa)):
+        ipdecimal += str(int(Iphexa[liminf:limsup],16))+"."
+        liminf = limsup
+        limsup = limsup + 2
+    ipdecimal = ipdecimal[0:len(ipdecimal)-1]
+    return print("Direccion IP Origen: "+ ipdecimal)

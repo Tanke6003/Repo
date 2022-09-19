@@ -22,6 +22,19 @@ def Go(x,y):
                 print("Opcion no valida")
         else:
             print("Opcion no valida")
+def Continue():
+    enter = False
+    while enter != True:
+        opc = input("Introduce 1 para continuar o 0 regresar al menu: ")
+        if(opc.isnumeric()):
+            if(int(opc)==1):
+                return
+            elif(int(opc)==0):
+                exit()
+            else:
+                print("Opcion no valida")
+        else:
+            print("Opcion no valida")
 def ComplementOne(bitnumber):
     length = len(bitnumber)
     bit = ""
