@@ -1,4 +1,4 @@
-from msilib import PID_TITLE
+import os
 import General
 def GetIp(pframe):
     global frame
@@ -15,8 +15,7 @@ def GetIp(pframe):
     print("===========IPV4 pt 2===========")
     GetTimeLife()
     Getprotocolo()
-    '''GetCheckSum()
-    '''
+    GetCheckSum()
     GetIpOrigin()
     GetIpDestino()
 
@@ -140,62 +139,36 @@ def GetCheckSum():
     ipbody = str.replace(str.replace(frame[42:101]," ",""),"\n","")
     limitInf = 0
     limitSup = 4
-    res = bin(0)
+    res = ""
     iplenght = len(ipbody)
     i=0
     while(limitSup < iplenght):
         i=i+1
-
+        #print("HEXA: ",ipbody[limitInf:limitSup]," BIN: ", General.StringHexaToBinary(ipbody[limitInf:limitSup]))
         if( limitInf != 20):
             ##print("numhexa",ipbody[limitInf:limitSup])
             numhexa = General.StringHexaToBinary(ipbody[limitInf:limitSup])
             ##print("numhexa convert to bin ",numhexa)
             numbin = General.StringBinToBinary(numhexa)
-            ##print("strin bin convert to bin ",numbin)
-            numcom = General.ComplementOne(numbin)
-            print("comp ",numcom)
-            res = bin(int(res,2)+int(numcom,2))[2:]
-            print( "res len",len(res))
-            if(len(res)>16 and res[1]=='1'):
-                carry = res[1]
+            numbin = General.ComplementOne(numbin)
+            print("strin bin convert to bin: ",numbin ,"LONG: ",len(numbin) )
+            if(res==""):
+                res = numbin
+            else:
+                res = bin(int(res,2)+int(numbin,2))[2:]
+            print("res: ",res," Long: ", len(res),"carry: ",res[0],"reswithoutcarry: ",res[1:] )
+            if(len(res)>16 and res[0]=='1'):
+                carry = res[0]
                 print("carry ",carry)
                 res = bin(int(res[1:],2)+int(carry,2))[2:]
-                print("len res carry",len(res))
-                #print( "res carry", res)
-                #print( "res carry", res)
-                if(len(res)>16 and res[1]=='1'):
-                    carry = res[1]
-                    ##print("carry2",carry)
-                    res = bin(int(res[1:],2)+int(carry,2))[2:]
-                    ##print("len res2",len(res))
-                    ##print( "res carry2", res)
+                print("res: ",res," Long: ", len(res),"carry: ",res[0],"reswithoutcarry: ",res[1:] )
+            ##res = General.ComplementOne(res)
+        limitInf = limitSup
+        limitSup += 4
+    print(res)
+    print (General.StringHexaToBinary(ipbody[20:24]))
+    return print(str.replace(str.replace(frame[42:101]," ",""),"\n","")) 
 
-            print(i,":",res)
-        limitInf = limitSup
-        limitSup += 4
-    return print(str.replace(str.replace(frame[42:101]," ",""),"\n",""))
-    """ ipbody = str.replace(str.replace(frame[42:101]," ",""),"\n","")
-    limitInf = 0
-    limitSup = 4
-    iplenght = len(ipbody)
-    res = "0000000000000000"
-    res = bin(int(General.StringBinToBinary(res),2))
-    while(limitSup < iplenght):
-        if( limitInf != 20):
-            bit = General.StringHexaToBinary(ipbody[limitInf:limitSup])
-            bit = General.ComplementOne(bit)
-            bit  = bin(bit)
-            print(int(res,2) + int(bit,2))
-            res = "{0:b}".format(int(res,2) + int(bit,2))
-            if len(res) == 17:
-                print("carry",res[1])
-                res = "{0:b}".format(int(res[1:],2) + int(res[1],2))
-            print("num",bit[2:])
-            print("res",res)
-        print(ipbody[limitInf:limitSup])
-        limitInf = limitSup
-        limitSup += 4
-    return print(str.replace(str.replace(frame[42:101]," ",""),"\n","")) """
 def GetIpOrigin():
     Iphexa = str.replace(frame[78:89]," ","")
     liminf =0

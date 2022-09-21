@@ -45,6 +45,50 @@ def ComplementOne(bitnumber):
         else:
             bit += "0"
     return bit
+def suma_binaria(numero_binario_1, numero_binario_2):
+    
+    carry = '0'
+    lista_resultado_suma = numero_binario_1
+
+    ComplementOne(numero_binario_1)
+    ComplementOne(numero_binario_2)
+
+    for e in range(len(numero_binario_1)):
+        
+        if carry == '1':
+            if numero_binario_1[e] == '1' and numero_binario_2[e] == '1': 
+                lista_resultado_suma[e] == '1'
+                carry = '1'                                                       
+            elif numero_binario_1[e] == '1' and numero_binario_2[e] == '0': 
+                lista_resultado_suma[e] = '0'                              
+                carry = '1'                                                            
+            elif numero_binario_1[e] =='0' and numero_binario_2[e] == '1': 
+                lista_resultado_suma[e] = '0'
+                carry = '1'
+            elif numero_binario_1[e] == '0' and numero_binario_2[e] == '0':
+                lista_resultado_suma[e] = '1'
+                carry = '0'
+
+        if carry == '0':
+            if numero_binario_1[e] == '1' and numero_binario_2[e] == '1':
+                lista_resultado_suma[e] = '0'
+                carry = '1'
+            elif numero_binario_1[e] == '1' and numero_binario_2[e] == '0':
+                lista_resultado_suma[e] = '1'
+                carry = '0'
+            elif numero_binario_1[e] =='0' and numero_binario_2[e] == '1':
+                lista_resultado_suma[e] = '1'
+                carry = '0'
+            elif numero_binario_1[e] == '0' and numero_binario_2[e] == '0':
+                lista_resultado_suma[e] = '0'
+                carry = '0'
+
+    for e in range(len(lista_resultado_suma)):
+        if carry == '1':
+            lista_resultado_suma[0] = '1'
+
+    ComplementOne(lista_resultado_suma)
+    return lista_resultado_suma
 
 
     
