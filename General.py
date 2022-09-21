@@ -49,9 +49,7 @@ def suma_binaria(numero_binario_1, numero_binario_2):
     
     carry = '0'
     lista_resultado_suma = numero_binario_1
-
-    ComplementOne(numero_binario_1)
-    ComplementOne(numero_binario_2)
+    lista_resultado_suma = list(lista_resultado_suma)
 
     for e in range(len(numero_binario_1)):
         

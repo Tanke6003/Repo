@@ -155,14 +155,8 @@ def GetCheckSum():
             if(res==""):
                 res = numbin
             else:
-                res = bin(int(res,2)+int(numbin,2))[2:]
+                res = General.suma_binaria(res,numbin)
             print("res: ",res," Long: ", len(res),"carry: ",res[0],"reswithoutcarry: ",res[1:] )
-            if(len(res)>16 and res[0]=='1'):
-                carry = res[0]
-                print("carry ",carry)
-                res = bin(int(res[1:],2)+int(carry,2))[2:]
-                print("res: ",res," Long: ", len(res),"carry: ",res[0],"reswithoutcarry: ",res[1:] )
-            ##res = General.ComplementOne(res)
         limitInf = limitSup
         limitSup += 4
     print(res)
