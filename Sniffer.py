@@ -1,5 +1,6 @@
 import Ethernet
 import Ip
+import Tcp
 import General
 frame =""
 def Main():
@@ -31,6 +32,8 @@ def Archivo():
     Ethernet.GetEthernetFrame(frame)
     General.Go(Main,"continue")
     Ip.GetIp(frame)
+    General.Go(Main,"continue")
+    Tcp.GetTcp(frame)
     General.Go(Main,exit)
 
 Main()

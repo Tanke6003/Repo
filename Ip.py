@@ -139,18 +139,23 @@ def GetCheckSum():
     ipbody = str.replace(str.replace(frame[42:101]," ",""),"\n","")
     limitInf = 0
     limitSup = 4
-    res = ""
+    res = "0000000000000000"
     iplenght = len(ipbody)
     i=0
-    while(limitSup < iplenght):
+    while(limitSup <= iplenght):
         i=i+1
-        print("HEXA: ",ipbody[limitInf:limitSup]," BIN: ", General.StringHexaToBinary(ipbody[limitInf:limitSup]))
-        #if( limitInf != 20):
+        ##print("HEXA: ",ipbody[limitInf:limitSup]," BIN: ", General.StringHexaToBinary(ipbody[limitInf:limitSup]))
+        ##print("BIN: ", General.StringHexaToBinary(ipbody[limitInf:limitSup]))
+        ##print("complemento",General.ComplementOne(General.StringHexaToBinary(ipbody[limitInf:limitSup])))
+        if( limitInf != 20):
             ##print("numhexa",ipbody[limitInf:limitSup])
-            ##numhexa = General.StringHexaToBinary(ipbody[limitInf:limitSup])
+            numhexa = General.StringHexaToBinary(ipbody[limitInf:limitSup])
             ##print("numhexa convert to bin ",numhexa)
             ##numbin = General.StringBinToBinary(numhexa)
-            ##numbin = General.ComplementOne(numbin)
+            numbin = General.ComplementOne(numhexa)
+            
+            ##res = General.suma_binaria(list(res),list(numbin))
+            res = General.sumarry(res,numbin)
             ##print("strin bin convert to bin: ",numbin ,"LONG: ",len(numbin) )
             ##if(res==""):
             ##    res = numbin
@@ -166,8 +171,11 @@ def GetCheckSum():
         limitInf = limitSup
         limitSup += 4
     ##print(res)
-    ##print (General.StringHexaToBinary(ipbody[20:24]))
-    return print(str.replace(str.replace(frame[42:101]," ",""),"\n","")) 
+    check =  General.sumarry(res,General.ComplementOne(General.StringHexaToBinary(ipbody[20:24])))
+    check = hex(int(check,2))
+    if(check != "0xffff"):
+        return print("checksum: incorrecto")
+    return print("checksum: correcto ",check) 
 
 def GetIpOrigin():
     Iphexa = str.replace(frame[78:89]," ","")
