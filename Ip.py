@@ -49,7 +49,7 @@ def GetPrecedencia(data):
         precedencia="Control de red ('network control')"
     else :
         precedencia="No valido"
-    return print("Precedencia: "+ precedencia)
+    return print("Precedencia: "+"("+data[0:3]+")"+ precedencia)
 def GetTOS(service):
     GetDelay(service[3])
     GetTroughput(service[4])
@@ -57,24 +57,24 @@ def GetTOS(service):
     GetCost(service[6])
 def GetDelay(data):
     if data == "0":
-        return print("Delay: Normal")
+        return print("Delay: "+"("+data+")"+" Normal")
     elif data == "1":
-        return print("Delay: Low")
+        return print("Delay: "+"("+data+")"+" Low")
 def GetTroughput(data):
     if data == "0":
-        return print("Troughput: Normal")
+        return print("Troughput: "+"("+data+")"+" Normal")
     elif data == "1":
-        return print("Troughput: High")
+        return print("Troughput: "+"("+data+")"+" High")
 def GetReliability(data):
     if data == "0":
-        return print("Reliability: Normal")
+        return print("Reliability: "+"("+data+")"+" Normal")
     elif data == "1":
-        return print("Reliability: High")
+        return print("Reliability: "+"("+data+")"+" High")
 def GetCost(data):
     if data == "0":
-        return print("Cost: Normal")
+        return print("Cost: "+"("+data+")"+" Normal")
     elif data == "1":
-        return print("Cost: Low")
+        return print("Cost: "+"("+data+")"+" Low")
 def GetMBZ(data):
     if data == "0":
         return print("MBZ: 0")
@@ -95,46 +95,49 @@ def GetBitReservado(data):
         return print("Bit reservado: 1 ('Error este campo debe ser reservado')")
 def GetDF(data):
     if data[1] == "0":
-        return print("DF: Permite Fragmentacion")
+        return print("DF: "+"("+data[1]+")"+" Permite Fragmentacion")
     elif data[1] == "1":
-        return print("DF: No Permite Fragmentacion")
+        return print("DF: "+"("+data[1]+")"+" No Permite Fragmentacion")
 def GetMF(data):
     if data[2] == "0":
-        return print("MF: Es el ultimo paquete del datagrama")
+        return print("MF: "+"("+data[2]+")"+" Es el ultimo paquete ")
     elif data[2] == "1":
-        return print("MF: No es el ultimo paquete del datagrama")
+        return print("MF: "+"("+data[2]+")"+"  No es el ultimo paquete ")
 def GetDesplazamiento():
-    desplazamiento = General.StringHexaToBinary(str.replace(frame[60:65]," ","a"))
-    desplazamiento = desplazamiento[4:]
-    print("Desplazamiento de la fragmentacion: " + str(int(desplazamiento,2)))
+    data=General.StringHexaToBinary(str.replace(frame[60:62]," ",""))
+    if(data[1]=="0"):
+        desplazamiento = General.StringHexaToBinary(str.replace(frame[60:65]," ","a"))
+        desplazamiento = desplazamiento[4:]
+        return print("Desplazamiento de la fragmentacion: " + str(int(desplazamiento,2)))
+    return print("Desplazamiento de la fragmentacion: no permite")
 def GetTimeLife():
     return print("Tiempo de vida en segundos: " +str(int(str.replace(frame[66:68]," ",""),16)))
 def Getprotocolo():
     protocolo = int(str.replace(frame[69:71]," ",""),16)
     if protocolo == 0:
-        return print("Protocolo: Reservado")
+        return print("Protocolo: "+"("+"0x"+str.replace(frame[69:71]," ","")+") "+"Reservado")
     elif protocolo == 1:
-        return print("Protocolo: ICMP(\"Internet Control Message Protocol\")")
+        return print("Protocolo: "+"("+"0x"+str.replace(frame[69:71]," ","")+") "+"ICMP(\"Internet Control Message Protocol\")")
     elif protocolo == 2:
-        return print("Protocolo: IGMP(\"Internet Group Management Protocol\")")
+        return print("Protocolo: "+"("+"0x"+str.replace(frame[69:71]," ","")+") "+"IGMP(\"Internet Group Management Protocol\")")
     elif protocolo == 3:
-        return print("Protocolo: GGP(\"Gateway-to-Gateway Protocol\")")
+        return print("Protocolo: "+"("+"0x"+str.replace(frame[69:71]," ","")+") "+"GGP(\"Gateway-to-Gateway Protocol\")")
     elif protocolo == 4:
-        return print("Protocolo: IP(IP encapsulation)")
+        return print("Protocolo: "+"("+"0x"+str.replace(frame[69:71]," ","")+") "+"IP(IP encapsulation)")
     elif protocolo == 5:
-        return print("Protocolo: Flujo(\"Stream\")")
+        return print("Protocolo: "+"("+"0x"+str.replace(frame[69:71]," ","")+") "+"Flujo(\"Stream\")")
     elif protocolo == 6:
-        return print("Protocolo: TCP(\"Transmission Control\")")
+        return print("Protocolo: "+"("+"0x"+str.replace(frame[69:71]," ","")+") "+"TCP(\"Transmission Control\")")
     elif protocolo == 8:
-        return print("Protocolo: EGP (\“Exterior Gateway Protocol\”)")
+        return print("Protocolo: "+"("+"0x"+str.replace(frame[69:71]," ","")+") "+"EGP (\“Exterior Gateway Protocol\”)")
     elif protocolo == 9:
-        return print("Protocolo: PIRP (“Private Interior Routing Protocol”)")
+        return print("Protocolo: "+"("+"0x"+str.replace(frame[69:71]," ","")+") "+"PIRP (“Private Interior Routing Protocol”)")
     elif protocolo == 17:
-        return print("Protocolo: UDP (“User Datagram”)")
+        return print("Protocolo: "+"("+"0x"+str.replace(frame[69:71]," ","")+") "+"UDP (“User Datagram”)")
     elif protocolo == 89:
-        return print("Protocolo: OSPF (“Open Shortest Path First”)")
+        return print("Protocolo: "+"("+"0x"+str.replace(frame[69:71]," ","")+") "+"OSPF (“Open Shortest Path First”)")
     else:
-        return print("Protocolo: no reconocido")
+        return print("Protocolo: "+"("+"0x"+str.replace(frame[69:71]," ","")+") "+"no reconocido")
 def GetCheckSum():
     ipbody = str.replace(str.replace(frame[42:101]," ",""),"\n","")
     limitInf = 0
@@ -151,16 +154,6 @@ def GetCheckSum():
             ##print("numhexa",ipbody[limitInf:limitSup])
             numhexa = General.StringHexaToBinary(ipbody[limitInf:limitSup])
             ##print("numhexa convert to bin ",numhexa)
-<<<<<<< HEAD
-            numbin = General.StringBinToBinary(numhexa)
-            numbin = General.ComplementOne(numbin)
-            print("strin bin convert to bin: ",numbin ,"LONG: ",len(numbin) )
-            if(res==""):
-                res = numbin
-            else:
-                res = General.suma_binaria(res,numbin)
-            print("res: ",res," Long: ", len(res),"carry: ",res[0],"reswithoutcarry: ",res[1:] )
-=======
             ##numbin = General.StringBinToBinary(numhexa)
             numbin = General.ComplementOne(numhexa)
             
@@ -178,7 +171,6 @@ def GetCheckSum():
             ##    res = bin(int(res[1:],2)+int(carry,2))[2:]
             ##    print("res: ",res," Long: ", len(res),"carry: ",res[0],"reswithoutcarry: ",res[1:] )
             ##res = General.ComplementOne(res)
->>>>>>> 3a058a1f4029051b0fef6844e3796840860587ad
         limitInf = limitSup
         limitSup += 4
     ##print(res)
@@ -186,7 +178,7 @@ def GetCheckSum():
     check = hex(int(check,2))
     if(check != "0xffff"):
         return print("checksum: incorrecto")
-    return print("checksum: correcto ",check) 
+    return print("checksum: correcto ",hex(int(res,2))) 
 
 def GetIpOrigin():
     Iphexa = str.replace(frame[78:89]," ","")
