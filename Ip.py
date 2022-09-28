@@ -139,16 +139,19 @@ def GetCheckSum():
     ipbody = str.replace(str.replace(frame[42:101]," ",""),"\n","")
     limitInf = 0
     limitSup = 4
-    res = ""
+    res = "0000000000000000"
     iplenght = len(ipbody)
     i=0
-    while(limitSup < iplenght):
+    while(limitSup <= iplenght):
         i=i+1
-        #print("HEXA: ",ipbody[limitInf:limitSup]," BIN: ", General.StringHexaToBinary(ipbody[limitInf:limitSup]))
+        ##print("HEXA: ",ipbody[limitInf:limitSup]," BIN: ", General.StringHexaToBinary(ipbody[limitInf:limitSup]))
+        ##print("BIN: ", General.StringHexaToBinary(ipbody[limitInf:limitSup]))
+        ##print("complemento",General.ComplementOne(General.StringHexaToBinary(ipbody[limitInf:limitSup])))
         if( limitInf != 20):
             ##print("numhexa",ipbody[limitInf:limitSup])
             numhexa = General.StringHexaToBinary(ipbody[limitInf:limitSup])
             ##print("numhexa convert to bin ",numhexa)
+<<<<<<< HEAD
             numbin = General.StringBinToBinary(numhexa)
             numbin = General.ComplementOne(numbin)
             print("strin bin convert to bin: ",numbin ,"LONG: ",len(numbin) )
@@ -157,11 +160,33 @@ def GetCheckSum():
             else:
                 res = General.suma_binaria(res,numbin)
             print("res: ",res," Long: ", len(res),"carry: ",res[0],"reswithoutcarry: ",res[1:] )
+=======
+            ##numbin = General.StringBinToBinary(numhexa)
+            numbin = General.ComplementOne(numhexa)
+            
+            ##res = General.suma_binaria(list(res),list(numbin))
+            res = General.sumarry(res,numbin)
+            ##print("strin bin convert to bin: ",numbin ,"LONG: ",len(numbin) )
+            ##if(res==""):
+            ##    res = numbin
+            ##else:
+            ##    res = bin(int(res,2)+int(numbin,2))[2:]
+            ##print("res: ",res," Long: ", len(res),"carry: ",res[0],"reswithoutcarry: ",res[1:] )
+            ##if(len(res)>16 and res[0]=='1'):
+            ##    carry = res[0]
+            ##    print("carry ",carry)
+            ##    res = bin(int(res[1:],2)+int(carry,2))[2:]
+            ##    print("res: ",res," Long: ", len(res),"carry: ",res[0],"reswithoutcarry: ",res[1:] )
+            ##res = General.ComplementOne(res)
+>>>>>>> 3a058a1f4029051b0fef6844e3796840860587ad
         limitInf = limitSup
         limitSup += 4
-    print(res)
-    print (General.StringHexaToBinary(ipbody[20:24]))
-    return print(str.replace(str.replace(frame[42:101]," ",""),"\n","")) 
+    ##print(res)
+    check =  General.sumarry(res,General.ComplementOne(General.StringHexaToBinary(ipbody[20:24])))
+    check = hex(int(check,2))
+    if(check != "0xffff"):
+        return print("checksum: incorrecto")
+    return print("checksum: correcto ",check) 
 
 def GetIpOrigin():
     Iphexa = str.replace(frame[78:89]," ","")
